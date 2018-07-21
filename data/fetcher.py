@@ -47,7 +47,7 @@ def _report_hook(block_num, block_size, total_size):
 #   df=1&mf=0&yf=2015&from=01.01.2015&dt=21&mt=6&yt=2018&to=21.07.2018&p=7&f=SBER_150101_180721&e=.txt&cn=SBER&
 #   dtf=4&tmf=3&MSOR=1&mstime=on&mstimever=1&sep=1&sep2=1&datf=1&at=1
 
-URL_PATTERN = 'http://export.finam.ru/{name}{ext}?market=1&em=3&code={code}&apply=0&' \
+URL_PATTERN = 'http://export.finam.ru/{name}{ext}?market={market}&em=3&code={code}&apply=0&' \
               'df={from_day}&mf={from_month}&yf={from_year}&from={from_str}&' \
               'dt={to_day}&mt={to_month}&yt={to_year}&to={to_str}&' \
               'p={period}&f={name}&e={ext}&cn={code}&dtf={date_format}&tmf={time_format}&' \
@@ -74,12 +74,52 @@ class Period(Enum):
     return name
 
 
-def generate_url(code, period, from_dt, to_dt):
+# Parsed from https://www.finam.ru/profile/mosbirzha-fyuchersy
+class Market(Enum):
+  MOEX_TOP = 200          # МосБиржа топ
+  MOEX_STOCK = 1          # МосБиржа акции
+  MOEX_FUTURES = 14       # МосБиржа фьючерсы
+  MOEX_RUB = 41           # Курс рубля
+  MOEX_FOREX = 45         # МосБиржа валютный рынок
+  MOEX_BONDS = 2          # МосБиржа облигации
+  MOEX_BONDS_OTHER = 12   # МосБиржа внесписочные облигации
+  MOEX_OEF = 29           # МосБиржа пифы
+  MOEX_ETF = 515          # Мосбиржа ETF
+  NOTES = 8               # Расписки
+  EUROBONDS = 519         # Еврооблигации
+  SPBEX = 517             # Санкт-Петербургская биржа
+  WORLD_IDX = 6           # Мировые Индексы
+  COMMODITIES = 24        # Товары
+  FOREX = 5               # Мировые валюты
+  CRYPTO = 520            # Криптовалюты
+  US_STOCK = 25           # Акции США(BATS)
+  US_FUTURES = 7          # Фьючерсы США
+  US_SECTORS = 27         # Отрасли экономики США
+  US_TREASURIES = 26      # Гособлигации США
+  ETF = 28                # ETF
+  ECONOMY_IDX = 30        # Индексы мировой экономики
+  RU_IDX = 91             # Российские индексы
+  RTS = 3                 # РТС
+  BOARD = 20              # Боард
+  RTS_GAZ = 10            # РТС-GAZ
+  ARCHIVE_FORTS = 17      # ФОРТС Архив
+  ARCHIVE_COMMOD = 31     # Сырье Архив
+  ARCHIVE_RTS_STD = 38    # RTS Standard Архив
+  ARCHIVE_MMVB = 16       # ММВБ Архив
+  ARCHIVE_RTS = 18        # РТС Архив
+  ARCHIVE_SPBEX = 9       # СПФБ Архив
+  ARCHIVE_RTS_BOARD = 32  # РТС-BOARD Архив
+  ARCHIVE_NOTES = 39      # Расписки Архив
+  ARCHIVE_SECTORES = -1   # Отрасли
+
+
+def generate_url(code, period, from_dt, to_dt, market=Market.MOEX_STOCK):
   name = '%s_%s_%s_%s' % (code, from_dt.strftime('%Y-%m-%d'), to_dt.strftime('%Y-%m-%d'), period.slug())
   url = URL_PATTERN.format(
     name = name,
     ext = '.txt',
     code = code,
+    market = market.value,
 
     from_day = from_dt.day,
     from_month = from_dt.month - 1,
