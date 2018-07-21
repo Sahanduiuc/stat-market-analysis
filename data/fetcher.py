@@ -110,7 +110,7 @@ class Market(Enum):
   ARCHIVE_SPBEX = 9       # СПФБ Архив
   ARCHIVE_RTS_BOARD = 32  # РТС-BOARD Архив
   ARCHIVE_NOTES = 39      # Расписки Архив
-  ARCHIVE_SECTORES = -1   # Отрасли
+  ARCHIVE_SECTORS = -1    # Отрасли
 
 
 def generate_url(code, period, from_dt, to_dt, market=Market.MOEX_STOCK):
@@ -137,7 +137,6 @@ def generate_url(code, period, from_dt, to_dt, market=Market.MOEX_STOCK):
     time_format=3,
   )
   return url, '%s.txt' % name
-
 
 
 # Interesting periods:
