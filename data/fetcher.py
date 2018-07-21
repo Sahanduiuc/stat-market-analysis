@@ -100,6 +100,9 @@ def generate_url(code, period, from_dt, to_dt):
 
 
 
+# Interesting periods:
+#   url, name = generate_url(code='SBER', period=Period.DAY, from_dt=datetime(year=2000, month=1, day=1), to_dt=datetime.now())
+#   url, name = generate_url(code='SBER', period=Period.HOUR, from_dt=datetime(year=2015, month=1, day=1), to_dt=datetime.now())
 def main():
   url, name = generate_url(code='SBER', period=Period.HOUR, from_dt=datetime(year=2015, month=1, day=1), to_dt=datetime.now())
   download_if_needed(url, path='.storage', filename=name)
