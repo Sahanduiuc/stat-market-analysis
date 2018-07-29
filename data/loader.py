@@ -31,13 +31,22 @@ def to_changes(raw):
   return changes_df
 
 
-def main():
-  plt.style.use('ggplot')
-  pd.options.display.max_rows = 50
-  pd.set_option('max_columns', 50)
-  pd.set_option('max_colwidth', 50)
-  pd.set_option('display.width', 200)
+def return_series(raw, key_from='open', key_to='close'):
+  name = '%s_%s_return' % (key_from, key_to) if key_from != 'open' else '%s_return' % key_to
+  returns = (raw[key_to] - raw[key_from]) / raw[key_from]
+  return name, returns
 
+
+def to_returns(raw, key_from='open', keys_to=('close',)):
+  columns = {}
+  for key in keys_to:
+    name, series = return_series(raw, key_from=key_from, key_to=key)
+    columns[name] = series
+  returns_df = raw.assign(**columns)
+  return returns_df
+
+
+def main():
   df = load('.storage/SBER_2000-01-01_2018-07-21_day.txt')
 
   close_df = df[['timestamp', 'close']]
@@ -53,4 +62,10 @@ def main():
 
 
 if __name__ == '__main__':
+  plt.style.use('ggplot')
+  pd.options.display.max_rows = 50
+  pd.set_option('max_columns', 50)
+  pd.set_option('max_colwidth', 50)
+  pd.set_option('display.width', 200)
+
   main()
