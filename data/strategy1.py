@@ -6,6 +6,15 @@ __author__ = 'maxim'
 
 """
 Predicting the day close/high price from the first hour.
+
+Models: 
+- when hour-close > hour-open
+       hour-close < hour-open
+
+Features:
+- %(hour close), %(hour high)
+- %(day open, prev day close)
+- %(prev day close), %(prev day high)
 """
 
 import matplotlib.pyplot as plt
@@ -16,7 +25,7 @@ from data.loader import load, to_returns
 
 
 def main():
-  day_df = load('.storage/SBER_2000-01-01_2018-07-29_day.txt')
+  day_df = load('.storage/SBER_2000-01-01_2018-12-30_day.txt')
   day_rets = to_returns(day_df, keys_to=('high',))
   day_rets = day_rets.set_index('timestamp')
   day_rets = day_rets.ix['2012-01-01':]
