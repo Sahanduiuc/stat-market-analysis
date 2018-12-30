@@ -31,16 +31,19 @@ def to_changes(raw):
   return changes_df
 
 
-def return_series(raw, key_from='open', key_to='close'):
-  name = '%s_%s_return' % (key_from, key_to) if key_from != 'open' else '%s_return' % key_to
-  returns = (raw[key_to] - raw[key_from]) / raw[key_from]
+def return_series(raw, key='close', relative_to=None):
+  name = '%s_return' % key
+  if relative_to:
+    returns = (raw[relative_to] - raw[key]) / raw[key]
+  else:
+    returns = raw[key].pct_change(1)
   return name, returns
 
 
-def to_returns(raw, key_from='open', keys_to=('close',)):
+def to_returns(raw, keys=('close',), relative_to=None):
   columns = {}
-  for key in keys_to:
-    name, series = return_series(raw, key_from=key_from, key_to=key)
+  for key in keys:
+    name, series = return_series(raw, key=key, relative_to=relative_to)
     columns[name] = series
   returns_df = raw.assign(**columns)
   return returns_df

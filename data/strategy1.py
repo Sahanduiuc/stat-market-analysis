@@ -26,14 +26,14 @@ from data.loader import load, to_returns
 
 def main():
   day_df = load('.storage/SBER_2000-01-01_2018-12-30_day.txt')
-  day_rets = to_returns(day_df, keys_to=('high',))
+  day_rets = to_returns(day_df, keys=('high',))
   day_rets = day_rets.set_index('timestamp')
   day_rets = day_rets.ix['2012-01-01':]
   day_rets = day_rets[['high_return']]
 
   # Get first hour returns
   hour_df = load('.storage/SBER_2012-01-01_2018-07-29_hour.txt')
-  hour_rets = to_returns(hour_df, keys_to=('close', 'high', 'low'))
+  hour_rets = to_returns(hour_df, keys=('close', 'high', 'low'))
   hour_rets = hour_rets.assign(day=pd.DatetimeIndex(hour_df.timestamp).normalize())
   hour_rets = hour_rets.drop_duplicates(subset='day')
   hour_rets = hour_rets.set_index('day')
