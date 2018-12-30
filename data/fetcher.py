@@ -139,12 +139,19 @@ def generate_url(code, period, from_dt, to_dt, market=Market.MOEX_STOCK):
   return url, '%s.txt' % name
 
 
+EQUITIES = [
+  'AFLT', 'AGRO', 'ALRS', 'AFKS', 'CHMF', 'FSK', 'GAZP', 'GMNK', 'HYDR', 'LKOH', 'LSGN', 'MFON', 'MGNT', 'MSNG', 'MRKP',
+  'MOEX', 'MTS', 'NVTK', 'OGKB', 'PHOR', 'PLZL', 'RASP', 'RTKM', 'SBER', 'SIBN', 'VTB', 'X5', 'YNDX',
+]
+
+
 # Interesting periods:
 #   url, name = generate_url(code='SBER', period=Period.DAY, from_dt=datetime(year=2000, month=1, day=1), to_dt=datetime.now())
 #   url, name = generate_url(code='SBER', period=Period.HOUR, from_dt=datetime(year=2015, month=1, day=1), to_dt=datetime.now())
 def main():
-  url, name = generate_url(code='SBER', period=Period.HOUR, from_dt=datetime(year=2015, month=1, day=1), to_dt=datetime.now())
-  download_if_needed(url, path='.storage', filename=name)
+  for ticker in EQUITIES:
+    url, name = generate_url(code=ticker, period=Period.DAY, from_dt=datetime(year=2000, month=1, day=1), to_dt=datetime.now())
+    download_if_needed(url, path='.storage', filename=name)
 
 
 if __name__ == '__main__':
